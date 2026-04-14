@@ -6,4 +6,11 @@ export const routes: Routes = [
     path: 'order',
     loadComponent: () => import('./order/order').then((m) => m.OrderComponent),
   },
+    {path: 'loading',
+    loadComponent: () => import('./loading/loading').then((m) => m.LoadingComponent),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
