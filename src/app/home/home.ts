@@ -5,7 +5,7 @@ import { ZardButtonComponent } from '@/shared/components/button';
 @Component({
   selector: 'home',
   imports: [ZardButtonComponent],
-  templateUrl: './home.html'
+  templateUrl: './home.html',
 })
 export class HomeComponent {
   private readonly router = inject(Router);
