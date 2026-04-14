@@ -1,9 +1,17 @@
 import { OrderService } from '@/services/order-service';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrderedCat, CategoryLabels, ChaosQuestions, MenuItems } from '@/constants/menu';
+import { OrderedCat, CategoryLabels, ChaosQuestions, MenuItems, ResetAfterCat } from '@/constants/menu';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MenuCategory, MenuItem } from '@/models/order';
+import { MenuCategory, MenuItem,  } from '@/models/order';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
+
+import { BrewCoinsPipe } from '@/pipes/coins-pipe';
+import { DodgeButtonDirective } from '@/directives/dodge-button';
+import { NotificationBannerComponent } from '@/shared/notifications/notifications';
+import { ZardBadgeComponent } from '@/shared/components/badge';
+import { ZardButtonComponent } from '@/shared/components/button';
 
 @Component({
   selector: 'order',
