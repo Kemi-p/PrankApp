@@ -6,7 +6,7 @@ import { NavbarComponent } from './shared/navbar/navbar';
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('PrankApp');

@@ -7,6 +7,6 @@ export const NotificationsMessages: string[] = [
   'Please acknowledge that you understand that you are ordering.',
   'One more thing before you order... actually several more things.',
   'Almost there! Just 3 more notifications to go. (There are more than 3.)',
-  "Last one! ... (This is not the last one.)",
+  'Last one! ... (This is not the last one.)',
   'OKAYYY NOW you can order. Probably. We make no promises.',
 ];
