@@ -1,4 +1,4 @@
-import type { MenuItem, MenuCategory } from './models/order';
+import type { MenuItem, MenuCategory } from '../models/order';
 
 export const MenuItems: MenuItem[] = [
   { id: 'espresso',           label: 'Espresso',                           advertised: 'R5', realPrice: 42,  category: 'coffee'      },
