@@ -1,12 +1,23 @@
-export interface OrderItem {
+export interface MenuItem {
+  id: string;
   label: string;
-  displayPrice: string;
+  advertised: string;
   realPrice: number;
+  category: MenuCategory;
 }
 
-export interface OrderState {
-  items: OrderItem[];
-  displayTotal: string;
+export type MenuCategory =
+  | 'coffee'
+  | 'milk'
+  | 'sugar'
+  | 'extras'
+  | 'size'
+  | 'temperature'
+  | 'chaos';
+
+export interface OrderSummary {
+  customerName: string;
+  items: MenuItem[];
+  advertisedTotal: number;
   realTotal: number;
-  bonusItems: OrderItem[];
 }
