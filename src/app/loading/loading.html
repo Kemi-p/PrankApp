@@ -8,12 +8,9 @@
       <p class="text-amber-600 italic text-sm animate-pulse">{{ progressMessage() }}</p>
     </div>
 
-    <div class="w-full max-w-sm space-y-2">
-      <z-progress-bar [zIndeterminate]="true" zSize="lg" />
-      <p class="text-center text-xs text-neutral-400">
-        Current charge: <span class="text-red-500 font-bold">R{{ displayTotal() }}</span>
-        <span class="ml-1 text-neutral-300">(and counting)</span>
-      </p>
+    <div class="text-center space-y-2">
+      <h2 class="text-2xl font-bold text-rose-900">Processing your order...</h2>
+      <p class="text-rose-500 italic text-sm animate-pulse">{{ progressMessage() }}</p>
     </div>
 
     @if (showMilkMessage()) {
@@ -28,7 +25,7 @@
 
   @if (showGif()) {
     <div class="text-center space-y-6 max-w-md">
-      <h2 class="text-2xl font-bold text-red-700">Your order has been... misplaced. 🕳️</h2>
+      <h2 class="text-2xl font-bold text-red-700">Your order has been... misplaced.</h2>
 
       <img
         src="https://i.pinimg.com/originals/aa/57/46/aa574640b0f3e2c22a4798233212e35d.gif"

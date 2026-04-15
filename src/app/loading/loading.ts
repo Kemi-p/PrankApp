@@ -41,9 +41,6 @@ export class LoadingComponent implements OnInit {
       .subscribe(() => {
         this.elapsed.update(e => e + 1);
 
-        // keep increase the total- maybe remove idk
-        this.displayTotal.update(t => t + Math.floor(Math.random() * 5) + 1);
-
         if (this.elapsed() === 5) {
           this.showMilkMessage.set(true);
         }
