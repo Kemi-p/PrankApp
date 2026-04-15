@@ -2,7 +2,6 @@ import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'notification-banner',
-  standalone: true,
   templateUrl: './notifications.html',
 })
 export class NotificationBannerComponent {
