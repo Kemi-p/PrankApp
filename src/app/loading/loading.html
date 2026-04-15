@@ -1,16 +1,11 @@
 <div class="min-h-screen bg-amber-50 flex flex-col items-center justify-center px-4 py-16 gap-8">
 
   @if (!showGif()) {
-    <div class="text-6xl animate-bounce">☕️w</div>
+    <div class="text-6xl animate-bounce">☕️</div>
 
     <div class="text-center space-y-2">
       <h2 class="text-2xl font-bold text-amber-900">Processing your order...</h2>
       <p class="text-amber-600 italic text-sm animate-pulse">{{ progressMessage() }}</p>
-    </div>
-
-    <div class="text-center space-y-2">
-      <h2 class="text-2xl font-bold text-rose-900">Processing your order...</h2>
-      <p class="text-rose-500 italic text-sm animate-pulse">{{ progressMessage() }}</p>
     </div>
 
     @if (showMilkMessage()) {
@@ -35,7 +30,7 @@
 
       <p class="text-neutral-500 text-sm italic">
         Your order total of <span class="text-red-500 font-bold">R{{ displayTotal() }}</span> has been noted.
-        We will not be refunding it💕
+        BUT your order was misplaced. oops
       </p>
 
       <button z-button zType="destructive" zSize="lg" (click)="tryAgain()">
