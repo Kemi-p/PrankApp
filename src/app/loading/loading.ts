@@ -15,7 +15,7 @@ import { OrderService } from '@/services/order-service';
 import { BrewCoinsPipe } from '@/pipes/coins-pipe';
 
 @Component({
-  selector: 'app-loading',
+  selector: 'loading',
   imports: [ZardButtonComponent, ZardProgressBarComponent, BrewCoinsPipe],
   templateUrl: './loading.html',
 })
