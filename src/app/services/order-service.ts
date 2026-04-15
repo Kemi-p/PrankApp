@@ -12,23 +12,24 @@ export class OrderService {
   readonly hasBeenReset = this.hasBeenResetState.asReadonly();
 
   readonly realTotal = computed(() =>
-    Array.from(this.selectedItemsState().values()).reduce((sum, item) => sum + item.realPrice, 0),
+    Array.from(this.selectedItemsState().values()).reduce(
+      (sum, item) => sum + item.realPrice,
+      0
+    )
   );
-
-  readonly advertisedTotal = computed(() => this.selectedItemsState().size * 5);
 
   setCustomerName(name: string): void {
     this.customerNameState.set(name);
   }
 
   toggleItem(item: MenuItem): void {
-    this.selectedItemsState.update((current) => {
-      const next = new Map(current);
-
-      next.has(item.id) ? next.delete(item.id) : next.set(item.id, item);
-
-      return next;
-    });
+    const current = new Map(this.selectedItemsState());
+    if (current.has(item.id)) {
+      current.delete(item.id);
+    } else {
+      current.set(item.id, item);
+    }
+    this.selectedItemsState.set(current);
   }
 
   isSelected(id: string): boolean {
@@ -38,10 +39,6 @@ export class OrderService {
   resetOrder(): void {
     this.selectedItemsState.set(new Map());
     this.customerNameState.set('');
-    this.hasBeenResetState.set(true);
-  }
-
-  markReset(): void {
     this.hasBeenResetState.set(true);
   }
 }

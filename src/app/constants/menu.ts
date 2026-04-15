@@ -40,7 +40,7 @@ export const MenuItems: MenuItem[] = [
   },
   {
     id: 'crushed-hope',
-    label: 'Crushed Hope™',
+    label: 'Crushed Hope',
     advertised: 'R5',
     realPrice: 99,
     category: 'extras',

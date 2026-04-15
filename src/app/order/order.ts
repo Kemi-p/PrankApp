@@ -1,12 +1,10 @@
 import { OrderService } from '@/services/order-service';
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { interval } from 'rxjs';
 import { OrderedCat, CategoryLabels, ChaosQuestions, MenuItems, ResetAfterCat } from '@/constants/menu';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MenuCategory, MenuItem,  } from '@/models/order';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DestroyRef } from '@angular/core';
+import { MenuCategory, MenuItem } from '@/models/order';
+
 
 import { BrewCoinsPipe } from '@/pipes/coins-pipe';
 import { DodgeButtonDirective } from '@/directives/dodge-button';
@@ -19,7 +17,16 @@ import { NotificationsMessages } from '@/constants/notifications';
 
 @Component({
   selector: 'order',
-  imports: [ ReactiveFormsModule, NotificationBannerComponent,DodgeButtonDirective,BrewCoinsPipe,ZardButtonComponent,ZardBadgeComponent,ZardCheckboxComponent,FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    NotificationBannerComponent,
+    DodgeButtonDirective,
+    BrewCoinsPipe,
+    ZardButtonComponent,
+    ZardBadgeComponent,
+    ZardCheckboxComponent,
+    FormsModule
+  ],
   templateUrl: './order.html',
 })
 export class OrderComponent implements OnInit {
@@ -30,10 +37,10 @@ export class OrderComponent implements OnInit {
   readonly orderedCategories = OrderedCat;
   readonly categoryLabels = CategoryLabels;
   readonly chaosQuestions = ChaosQuestions;
-  readonly notificationMessages= NotificationsMessages;
+  readonly notificationMessages = NotificationsMessages;
 
   //signals for state
-   readonly activeNotifications = signal<number[]>([...Array(10).keys()]);
+  readonly activeNotifications = signal<number[]>([...Array(10).keys()]);
   readonly notificationsVisible = signal(false);
   readonly formInteracted = signal(false);
   readonly resetBannerVisible = signal(false);
@@ -41,12 +48,19 @@ export class OrderComponent implements OnInit {
   readonly hasCompletedOnce = signal(false);
   readonly runningTotal = signal(0);
 
+  readonly checkboxReset = signal(0);
+
+  readonly allNotificationsDismissed = computed(
+    () => this.activeNotifications().length === 0
+  );
+
   readonly realTotal = this.orderService.realTotal;
-  readonly advertisedTotal = this.orderService.advertisedTotal;
   readonly hasBeenReset = this.orderService.hasBeenReset;
 
   readonly canSubmit = computed(
-    () => this.hasBeenReset() && this.formInteracted() && this.activeNotifications().length === 0
+    () =>
+      this.hasBeenReset() &&
+      this.form?.valid
   );
 
   form!: FormGroup;
@@ -56,6 +70,7 @@ export class OrderComponent implements OnInit {
   }
 
   isSelected(id: string): boolean {
+    this.checkboxReset();
     return this.orderService.isSelected(id);
   }
 
@@ -73,7 +88,7 @@ export class OrderComponent implements OnInit {
     });
   }
 
-   onNameInput(): void {
+  onNameInput(): void {
     const name = this.form.get('customerName')?.value ?? '';
     this.orderService.setCustomerName(name);
   }
@@ -91,7 +106,6 @@ export class OrderComponent implements OnInit {
   toggleItem(item: MenuItem, categoryIndex: number): void {
     this.orderService.toggleItem(item);
 
-    // Trigger reset after second-last category (index 4 = size)
     if (categoryIndex === ResetAfterCat && !this.hasBeenReset()) {
       setTimeout(() => this.triggerReset(), 300);
     }
@@ -99,10 +113,15 @@ export class OrderComponent implements OnInit {
 
   private triggerReset(): void {
     this.orderService.resetOrder();
+
+    this.checkboxReset.update(v => v + 1);
+
+
+    this.form.reset();
+
     this.resetBannerVisible.set(true);
     this.hasCompletedOnce.set(false);
     this.submitDodgeEnabled.set(false);
-    this.buildForm();
 
     setTimeout(() => {
       this.resetBannerVisible.set(false);
@@ -115,7 +134,6 @@ export class OrderComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.canSubmit()) return;
-    if (this.form.invalid) return;
     this.router.navigate(['/loading']);
   }
 

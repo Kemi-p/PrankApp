@@ -32,9 +32,7 @@
   <div class="sticky top-0 z-10 bg-white border-b border-rose-200 shadow-sm px-6 py-3 flex items-center justify-between">
     <span class="text-sm text-neutral-500">Running Total</span>
     <div class="flex items-center gap-3">
-      <span class="line-through text-neutral-400 text-sm">R{{ advertisedTotal() }}</span>
       <span class="text-red-600 font-bold text-lg">R{{ realTotal() }}</span>
-      <span class="text-xs text-neutral-400 italic">{{ realTotal() | brewCoins }}</span>
     </div>
   </div>
 
