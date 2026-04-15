@@ -16,6 +16,35 @@
       </p>
     </div>
 
+    @if (showMilkMessage()) {
+      <div class="bg-red-50 border border-red-200 rounded-xl px-6 py-4 text-center max-w-sm">
+        <p class="text-red-700 font-semibold text-sm">🥛 Update from the barista:</p>
+        <p class="text-red-500 text-sm mt-1 italic">
+          "Waiting for my dad to come back with the milk. He left in 1987. Should be back soon."
+        </p>
+      </div>
+    }
+  }
+
+  @if (showGif()) {
+    <div class="text-center space-y-6 max-w-md">
+      <h2 class="text-2xl font-bold text-red-700">Your order has been... misplaced. 🕳️</h2>
+
+      <img
+        src="https://i.pinimg.com/originals/aa/57/46/aa574640b0f3e2c22a4798233212e35d.gif"
+        alt="Order lost"
+        class="rounded-2xl shadow-lg mx-auto w-full max-w-xs"
+      />
+
+      <p class="text-neutral-500 text-sm italic">
+        Your order total of <span class="text-red-500 font-bold">R{{ displayTotal() }}</span> has been noted.
+        We will not be refunding it💕
+      </p>
+
+      <button z-button zType="destructive" zSize="lg" (click)="tryAgain()">
+        Try Again (Please Don't🧍‍♂️)
+      </button>
+    </div>
   }
 
 </div>
