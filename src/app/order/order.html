@@ -1,0 +1,164 @@
+<div class="min-h-screen bg-rose-50 pb-24" (click)="onFirstInteraction()" (keydown)="onFirstInteraction()">
+
+  @if (notificationsVisible()) {
+    @for (index of activeNotifications(); track index) {
+      <notification-banner
+        [message]="notificationMessages[index]"
+        [index]="index"
+        (dismissed)="dismissNotification($event)">
+        <span>{{ notificationMessages[index] }}</span>
+      </notification-banner>
+    }
+  }
+
+  @if (resetBannerVisible()) {
+    <div class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-full max-w-md px-4 py-3
+                rounded-xl shadow-xl bg-red-100 border border-red-400 text-red-800
+                flex items-center justify-between gap-3 text-sm">
+      <span>😤 Oops, wasn't happy with your order. Try again.</span>
+      <button type="button" class="font-bold text-red-600 hover:text-red-900" (click)="dismissResetBanner()">✕</button>
+    </div>
+  }
+
+  <div class="bg-rose-900 text-white text-center py-6 px-4">
+    <h1 class="text-2xl font-bold">☕ Place Your Order</h1>
+    <p class="text-rose-300 text-sm mt-1">All items R5 each. No catch. (There is a catch.)</p>
+  </div>
+
+  <div class="sticky top-0 z-10 bg-white border-b border-rose-200 shadow-sm px-6 py-3 flex items-center justify-between">
+    <span class="text-sm text-neutral-500">Running Total</span>
+    <div class="flex items-center gap-3">
+      <span class="text-red-600 font-bold text-lg">R{{ realTotal() }}</span>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="max-w-2xl mx-auto px-4 pt-8 space-y-10">
+
+    <div class="bg-white rounded-2xl border border-rose-200 shadow-sm p-6 space-y-3">
+      <h2 class="text-lg font-semibold text-rose-900">Your Name</h2>
+      <p class="text-sm text-neutral-400">So the barista knows who to blame.</p>
+      <input
+        type="text"
+        formControlName="customerName"
+        placeholder="Enter your name..."
+        class="w-full border border-neutral-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400"
+        (input)="onNameInput()"
+        (focus)="onFirstInteraction()"
+      />
+      @if (nameError()) {
+        <p class="text-xs text-red-500">{{ nameError() }}</p>
+      }
+    </div>
+
+    @for (category of orderedCategories; track category; let catIndex = $index) {
+      @if (category !== 'chaos') {
+        @defer (on viewport) {
+          <div class="bg-white rounded-2xl border border-rose-200 shadow-sm p-6 space-y-4">
+            <h2 class="text-lg font-semibold text-rose-900">{{ categoryLabels[category] }}</h2>
+            <div class="space-y-3">
+              @for (item of getItemsByCategory(category); track item.id) {
+                <div class="flex items-center justify-between">
+                  <span z-checkbox
+                    [ngModel]="orderService.selectedIds().has(item.id)"
+                    (checkChange)="toggleItem(item, catIndex)">
+                    {{ item.label }}
+                  </span>
+                  <span z-badge zType="outline" class="text-xs">{{ item.advertised }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        } @placeholder {
+          <div class="bg-white rounded-2xl border border-rose-100 shadow-sm p-6 h-32 animate-pulse">
+            <div class="h-4 bg-rose-100 rounded w-1/3 mb-4"></div>
+            <div class="h-3 bg-rose-50 rounded w-2/3"></div>
+          </div>
+        }
+      }
+    }
+
+    <div class="bg-white rounded-2xl border border-red-200 shadow-sm p-6 space-y-6">
+      <div>
+        <h2 class="text-lg font-semibold text-red-700">Important Questions (Required by Law)</h2>
+        <p class="text-xs text-neutral-400 italic">Failure to answer may result in a warmer beverage.</p>
+      </div>
+
+      <div class="space-y-2">
+        <p class="text-sm font-medium text-neutral-700">{{ chaosQuestions['emotional'] }}</p>
+        @for (item of getChaosItems('emotional'); track item.id) {
+          <div class="flex items-center justify-between">
+            <span z-checkbox
+              [ngModel]="orderService.selectedIds().has(item.id)"
+              (checkChange)="toggleItem(item, 99)">
+              {{ item.label }}
+            </span>
+            <span z-badge zType="outline">{{ item.advertised }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <p class="text-sm font-medium text-neutral-700">{{ chaosQuestions['garfield'] }}</p>
+        @for (item of getChaosItems('garfield'); track item.id) {
+          <div class="flex items-center justify-between">
+            <span z-checkbox
+              [ngModel]="orderService.selectedIds().has(item.id)"
+              (checkChange)="toggleItem(item, 99)">
+              {{ item.label }}
+            </span>
+            <span z-badge zType="outline">{{ item.advertised }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <p class="text-sm font-medium text-neutral-700">{{ chaosQuestions['earth'] }}</p>
+        @for (item of getChaosItems('earth'); track item.id) {
+          <div class="flex items-center justify-between">
+            <span z-checkbox
+              [ngModel]="orderService.selectedIds().has(item.id)"
+              (checkChange)="toggleItem(item, 99)">
+              {{ item.label }}
+            </span>
+            <span z-badge zType="outline">{{ item.advertised }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="pb-10 flex flex-col items-center gap-3">
+
+      @if (!hasBeenReset()) {
+        <p class="text-xs text-neutral-400 italic text-center">
+          Submit will be available shortly. Please complete your order first.
+        </p>
+      }
+
+      @if (hasBeenReset()) {
+        <div class="relative flex justify-center w-full overflow-visible py-6">
+          <button
+            dodgeButton
+            #dodger="dodgeButton"
+            [dodgesAllowed]="4"
+            z-button
+            zSize="lg"
+            zShape="circle"
+            type="button"
+            [zDisabled]="form.invalid"
+            (click)="dodger.dodgeCount() >= 4 ? onSubmit() : null"
+            class="px-10 text-base gap-2">
+            {{ dodger.dodgeCount() >= 4 ? '✓ Place Order' : 'Submit Order →' }}
+          </button>
+        </div>
+
+        @if (dodger.dodgeCount() < 4) {
+          <p class="text-xs text-neutral-400 italic animate-pulse">
+            (Hover over the button to submit)
+          </p>
+        }
+      }
+
+    </div>
+
+  </form>
+</div>
