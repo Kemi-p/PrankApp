@@ -11,6 +11,10 @@ export class OrderService {
   readonly customerName = this.customerNameState.asReadonly();
   readonly hasBeenReset = this.hasBeenResetState.asReadonly();
 
+  readonly selectedIds = computed(() =>
+    new Set(this.selectedItemsState().keys())
+  );
+
   readonly realTotal = computed(() =>
     Array.from(this.selectedItemsState().values()).reduce(
       (sum, item) => sum + item.realPrice,
@@ -30,10 +34,6 @@ export class OrderService {
       current.set(item.id, item);
     }
     this.selectedItemsState.set(current);
-  }
-
-  isSelected(id: string): boolean {
-    return this.selectedItemsState().has(id);
   }
 
   resetOrder(): void {
