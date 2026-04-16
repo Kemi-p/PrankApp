@@ -5,7 +5,6 @@ import { OrderedCat, CategoryLabels, ChaosQuestions, MenuItems, ResetAfterCat } 
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MenuCategory, MenuItem } from '@/models/order';
 
-
 import { BrewCoinsPipe } from '@/pipes/coins-pipe';
 import { DodgeButtonDirective } from '@/directives/dodge-button';
 import { NotificationBannerComponent } from '@/shared/notifications/notifications';
@@ -39,7 +38,6 @@ export class OrderComponent implements OnInit {
   readonly chaosQuestions = ChaosQuestions;
   readonly notificationMessages = NotificationsMessages;
 
-  //signals for state
   readonly activeNotifications = signal<number[]>([...Array(10).keys()]);
   readonly notificationsVisible = signal(false);
   readonly formInteracted = signal(false);
@@ -47,8 +45,6 @@ export class OrderComponent implements OnInit {
   readonly submitDodgeEnabled = signal(false);
   readonly hasCompletedOnce = signal(false);
   readonly runningTotal = signal(0);
-
-  readonly checkboxReset = signal(0);
 
   readonly allNotificationsDismissed = computed(
     () => this.activeNotifications().length === 0
@@ -58,20 +54,13 @@ export class OrderComponent implements OnInit {
   readonly hasBeenReset = this.orderService.hasBeenReset;
 
   readonly canSubmit = computed(
-    () =>
-      this.hasBeenReset() &&
-      this.form?.valid
+    () => this.hasBeenReset() && this.form?.valid
   );
 
   form!: FormGroup;
 
   getItemsByCategory(category: MenuCategory): MenuItem[] {
     return MenuItems.filter((i) => i.category === category);
-  }
-
-  isSelected(id: string): boolean {
-    this.checkboxReset();
-    return this.orderService.isSelected(id);
   }
 
   getChaosItems(prefix: string): MenuItem[] {
@@ -113,12 +102,7 @@ export class OrderComponent implements OnInit {
 
   private triggerReset(): void {
     this.orderService.resetOrder();
-
-    this.checkboxReset.update(v => v + 1);
-
-
     this.form.reset();
-
     this.resetBannerVisible.set(true);
     this.hasCompletedOnce.set(false);
     this.submitDodgeEnabled.set(false);
